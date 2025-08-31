@@ -1,5 +1,9 @@
 # Gunny
 
+[![Main Branch Build Status](https://img.shields.io/github/actions/workflow/status/gunnyworks/gunny/go.yaml)](https://github.com/gunnyworks/gunny/actions/workflows/go.yaml?query=branch%3Amain)
+[![GitHub Release](https://img.shields.io/github/v/release/gunnyworks/gunny)](https://github.com/gunnyworks/gunny/releases)
+[![Go Reference](https://pkg.go.dev/badge/github.com/gunnyworks/gunny.svg)](https://pkg.go.dev/github.com/gunnyworks/gunny)
+
 Fast, simple static text generation from templates and data.
 
 ## Installation
