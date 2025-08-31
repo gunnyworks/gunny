@@ -39,8 +39,8 @@ func newRootCmd() *cobra.Command {
 			}
 			pipeline, err := gunny.NewPipeline(
 				gunny.WithMustacheTemplateFromReader(strings.NewReader(templateContent)),
-				gunny.WithDataFromNameValuePairs(namedDataValues),
 				gunny.WithDataFromReader(os.Stdin, stdinDataFormat),
+				gunny.WithDataFromNameValuePairs(namedDataValues),
 			)
 			if err != nil {
 				slog.Error("Failed to initialize Gunny", "error", err)
