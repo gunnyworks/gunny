@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.3
+
+_Aug 31st, 2025_
+
+- More trivial fixes to attempt to get version and commit hash built into
+  binary when showing `--version`
+
+## v0.1.2
+
+_Aug 31st, 2025_
+
+- Trivial fixes to attempt to get version and commit hash built into binary
+  when showing `--version`
+
 ## v0.1.1
 
 _Aug 31st, 2025_
