@@ -2,6 +2,23 @@
 
 Fast, simple static text generation from templates and data.
 
+## Installation
+
+### Prerequisites
+
+Supported platforms: macOS and Linux.
+
+### Installing from GitHub release
+
+Visit [Releases](https://github.com/gunnyworks/gunny/releases) and download the
+latest version for your platform, installing it somewhere on your system path.
+
+### Installing from source
+
+```bash
+go install github.com/gunnyworks/gunny/cmd/gunny@latest
+```
+
 ## Usage
 
 ### Inline templating and data substitution
