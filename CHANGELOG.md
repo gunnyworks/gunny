@@ -1,0 +1,13 @@
+# Changelog
+
+# v0.1.0
+
+_Aug 31st, 2025_
+
+First official release! Gunny is very much in an alpha state, and its
+interfaces are subject to breakage, but includes the following features:
+
+- Rendering static content from Mustache templates (no support for partials
+  yet)
+- Supplying data values via CLI arguments
+- Supplying data via stdin (in either JSON or YAML format)

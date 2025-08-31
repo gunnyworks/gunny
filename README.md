@@ -11,6 +11,12 @@ gunny -t 'Hello {{name}}!' -v name=Michael
 # Hello Michael!
 ```
 
+## Versioning
+
+Gunny follows [semantic versioning](https://semver.org). Prior to v1.0, Gunny's
+interfaces (code and CLI) are subject to breaking changes in minor version
+releases (e.g. v0.1 to v0.2).
+
 ## License
 
 Copyright 2025 Thane Thomson and contributors
