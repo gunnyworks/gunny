@@ -8,6 +8,8 @@ import (
 	"github.com/samber/lo"
 )
 
+// DataFormat defines the format in which data is supplied, which gives an
+// indication as to which parser Gunny should use.
 type DataFormat string
 
 const (

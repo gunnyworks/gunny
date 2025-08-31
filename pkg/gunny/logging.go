@@ -17,14 +17,21 @@ type Logger interface {
 	Error(msg string, args ...any)
 }
 
+// DefaultLogger returns Gunny's default [Logger] instance. By default, this
+// simply uses [log/slog].
 func DefaultLogger() Logger {
 	return &SlogLogger{}
 }
 
-func ContextWithLogger(ctx context.Context, logger Logger) context.Context {
+// NewContextWithLogger constructs a new [context.Context] with the given
+// logger attached as a value.
+func NewContextWithLogger(ctx context.Context, logger Logger) context.Context {
 	return context.WithValue(ctx, contextKeyLogger, logger)
 }
 
+// LoggerFromContext attempts to get the [Logger] instance associated with the
+// given context, if one exists. If no such logger exists, the result of
+// [DefaultLogger] will be returned.
 func LoggerFromContext(ctx context.Context) Logger {
 	loggerValue := ctx.Value(contextKeyLogger)
 	if loggerValue == nil {
@@ -37,6 +44,7 @@ func LoggerFromContext(ctx context.Context) Logger {
 	return logger
 }
 
+// SlogLogger is a trivial facade for [log/slog] that implements [Logger].
 type SlogLogger struct{}
 
 var _ Logger = (*SlogLogger)(nil)

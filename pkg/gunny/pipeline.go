@@ -92,6 +92,6 @@ func NewPipeline(opts ...newPipelineOption) (*Pipeline, error) {
 // Render executes the entire pipeline rendering operation fully.
 func (p *Pipeline) Render(ctx context.Context) error {
 	p.logger.Debug("Rendering")
-	ctxWithLogger := ContextWithLogger(ctx, p.logger)
+	ctxWithLogger := NewContextWithLogger(ctx, p.logger)
 	return p.renderer.Render(ctxWithLogger, p.resolvers, p.writer)
 }

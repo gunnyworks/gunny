@@ -62,12 +62,14 @@ type InMemoryDataValue[T any] struct {
 	value T
 }
 
+// NewInMemoryDataValue wraps the given value in an [InMemoryDataValue].
 func NewInMemoryDataValue[T any](value T) *InMemoryDataValue[T] {
 	return &InMemoryDataValue[T]{
 		value: value,
 	}
 }
 
+// Resolve implements [DataResolver].
 func (v *InMemoryDataValue[T]) Resolve(ctx context.Context) (any, error) {
 	return v.value, nil
 }
