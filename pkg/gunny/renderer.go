@@ -18,6 +18,8 @@ var _ Renderer = (*NullRenderer)(nil)
 
 // Render implements Renderer.
 func (n *NullRenderer) Render(ctx context.Context, data DataResolver, w io.Writer) error {
+	logger := LoggerFromContext(ctx)
+	logger.Debug("Using null renderer")
 	// Do nothing
 	return nil
 }
@@ -45,10 +47,13 @@ func NewMustacheTemplateRenderer(r io.Reader) (*MustacheTemplateRenderer, error)
 
 // Render implements Renderer.
 func (r *MustacheTemplateRenderer) Render(ctx context.Context, data DataResolver, w io.Writer) error {
+	logger := LoggerFromContext(ctx)
+	logger.Debug("Using Mustache template renderer")
 	// We only attempt to resolve data as we are about to render.
 	resolvedData, err := data.Resolve(ctx)
 	if err != nil {
 		return err
 	}
+	logger.Debug("Resolved data", "data", resolvedData)
 	return r.tmpl.Render(w, resolvedData)
 }

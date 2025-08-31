@@ -11,6 +11,7 @@ type Pipeline struct {
 	renderer  Renderer
 	resolvers DataResolverMap
 	writer    io.Writer
+	logger    Logger
 }
 
 type newPipelineOption func(*Pipeline) error
@@ -62,6 +63,15 @@ func WithOutputWriter(w io.Writer) newPipelineOption {
 	}
 }
 
+// WithLogger allows customization of the logging mechanism used. By default,
+// Go's slog is used.
+func WithLogger(logger Logger) newPipelineOption {
+	return func(pipeline *Pipeline) error {
+		pipeline.logger = logger
+		return nil
+	}
+}
+
 // NewPipeline constructs an empty Gunny rendering pipeline that, by default,
 // renders to stdout.
 func NewPipeline(opts ...newPipelineOption) (*Pipeline, error) {
@@ -69,6 +79,7 @@ func NewPipeline(opts ...newPipelineOption) (*Pipeline, error) {
 		renderer:  &NullRenderer{},
 		resolvers: make(DataResolverMap),
 		writer:    os.Stdout,
+		logger:    &SlogLogger{},
 	}
 	for _, opt := range opts {
 		if err := opt(pipeline); err != nil {
@@ -80,5 +91,7 @@ func NewPipeline(opts ...newPipelineOption) (*Pipeline, error) {
 
 // Render executes the entire pipeline rendering operation fully.
 func (p *Pipeline) Render(ctx context.Context) error {
-	return p.renderer.Render(ctx, p.resolvers, p.writer)
+	p.logger.Debug("Rendering")
+	ctxWithLogger := ContextWithLogger(ctx, p.logger)
+	return p.renderer.Render(ctxWithLogger, p.resolvers, p.writer)
 }
