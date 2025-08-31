@@ -10,7 +10,10 @@ Fast, simple static text generation from templates and data.
 
 ### Prerequisites
 
-Supported platforms: macOS and Linux.
+Supported platforms: 
+
+- macOS 
+- Linux
 
 ### Installing from GitHub release
 
