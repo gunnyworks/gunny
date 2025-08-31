@@ -1,6 +1,12 @@
 # Changelog
 
-# v0.1.0
+## v0.1.1
+
+_Aug 31st, 2025_
+
+- Add `--version` flag to show Gunny version and exit
+
+## v0.1.0
 
 _Aug 31st, 2025_
 
