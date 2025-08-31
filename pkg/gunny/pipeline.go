@@ -42,6 +42,23 @@ func WithDataFromNameValuePairs(nameValuePairStrings []string) newPipelineOption
 	}
 }
 
+// WithDataFromStdin is similar to [WithDataFromReader], but first checks
+// whether there is any data available to read from stdin. Otherwise results in
+// an empty data set.
+func WithDataFromStdin(format DataFormat) newPipelineOption {
+	return func(pipeline *Pipeline) error {
+		stat, err := os.Stdin.Stat()
+		if err != nil {
+			return err
+		}
+		if (stat.Mode() & os.ModeCharDevice) != 0 {
+			// Do nothing
+			return nil
+		}
+		return WithDataFromReader(os.Stdin, format)(pipeline)
+	}
+}
+
 // WithDataFromReader allows one to supply data to a Gunny pipeline from a
 // reader. The format must be specified.
 func WithDataFromReader(reader io.Reader, format DataFormat) newPipelineOption {
