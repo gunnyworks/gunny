@@ -1,0 +1,84 @@
+package gunny
+
+import (
+	"context"
+	"io"
+	"os"
+)
+
+// Pipeline encapsulates the configuration of a Gunny rendering pipeline.
+type Pipeline struct {
+	renderer  Renderer
+	resolvers DataResolverMap
+	writer    io.Writer
+}
+
+type newPipelineOption func(*Pipeline) error
+
+// WithMustacheTemplateFromReader reads all it can from the given reader,
+// attempting to interpret it as a Mustache template.
+func WithMustacheTemplateFromReader(r io.Reader) newPipelineOption {
+	return func(pipeline *Pipeline) error {
+		renderer, err := NewMustacheTemplateRenderer(r)
+		if err != nil {
+			return err
+		}
+		pipeline.renderer = renderer
+		return nil
+	}
+}
+
+// WithDataFromNameValuePairs allows one to supply data to a Gunny pipeline
+// from "name=value" strings (usually from the command line).
+func WithDataFromNameValuePairs(nameValuePairStrings []string) newPipelineOption {
+	return func(pipeline *Pipeline) error {
+		resolver, err := NewNameValuePairsDataResolver(nameValuePairStrings)
+		if err != nil {
+			return err
+		}
+		pipeline.resolvers.Merge(resolver)
+		return nil
+	}
+}
+
+// WithDataFromReader allows one to supply data to a Gunny pipeline from a
+// reader. The format must be specified.
+func WithDataFromReader(reader io.Reader, format DataFormat) newPipelineOption {
+	return func(pipeline *Pipeline) error {
+		resolver, err := NewDataResolverFromReader(reader, format)
+		if err != nil {
+			return err
+		}
+		pipeline.resolvers.Merge(resolver)
+		return nil
+	}
+}
+
+// WithOutputWriter allows one to specify where to write rendered output.
+func WithOutputWriter(w io.Writer) newPipelineOption {
+	return func(pipeline *Pipeline) error {
+		pipeline.writer = w
+		return nil
+	}
+}
+
+// NewPipeline constructs an empty Gunny rendering pipeline that, by default,
+// renders to stdout.
+func NewPipeline(opts ...newPipelineOption) (*Pipeline, error) {
+	pipeline := &Pipeline{
+		renderer:  &NullRenderer{},
+		resolvers: make(DataResolverMap),
+		writer:    os.Stdout,
+	}
+	for _, opt := range opts {
+		if err := opt(pipeline); err != nil {
+			return nil, err
+		}
+	}
+	return pipeline, nil
+}
+
+// Render executes the entire pipeline rendering operation fully.
+func (p *Pipeline) Render(ctx context.Context) error {
+	return p.renderer.Render(ctx, p.resolvers, p.writer)
+}
