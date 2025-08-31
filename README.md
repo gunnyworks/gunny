@@ -35,7 +35,7 @@ go install github.com/gunnyworks/gunny/cmd/gunny@latest
 
 ```bash
 # Supply template and data via CLI arguments
-gunny -t 'Hello {{name}}!' -v name=Michael
+gunny -t 'Hello {{name}}!' -d name=Michael
 # Hello Michael!
 
 # Supply template via CLI argument, but pipe data in in JSON format
@@ -45,6 +45,17 @@ echo '{"name": "Gary"}' | gunny -t 'Hello {{name}}!'
 # Pipe data in in YAML format
 echo 'name: Sarah' | gunny -t 'Hello {{name}}!' --stdin-format yaml
 # Hello Sarah!
+```
+
+### File-based templates
+
+```bash
+echo 'Hello {{name}}!' > ./hello.mustache
+gunny --template-file ./hello.mustache -d name=Michael
+# Hello Michael!
+
+echo '{"name": "Gary"}' | gunny --template-file ./hello.mustache
+# Hello Gary!
 ```
 
 ## Versioning
