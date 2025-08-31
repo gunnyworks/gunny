@@ -34,10 +34,17 @@ go install github.com/gunnyworks/gunny/cmd/gunny@latest
 ### Inline templating and data substitution
 
 ```bash
+# Supply template and data via CLI arguments
 gunny -t 'Hello {{name}}!' -v name=Michael
 # Hello Michael!
 
+# Supply template via CLI argument, but pipe data in in JSON format
 echo '{"name": "Gary"}' | gunny -t 'Hello {{name}}!'
+# Hello Gary!
+
+# Pipe data in in YAML format
+echo 'name: Sarah' | gunny -t 'Hello {{name}}!' --stdin-format yaml
+# Hello Sarah!
 ```
 
 ## Versioning
