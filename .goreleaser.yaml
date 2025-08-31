@@ -17,6 +17,8 @@ builds:
       - arm64
     main: ./cmd/gunny/
     binary: gunny
+    ldflags:
+      - "-s -w -X main.gunnyVersion={{.Version}} -X main.gunnyCommit={{.Commit}}"
 
 archives:
   - formats: [tar.gz]

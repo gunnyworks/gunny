@@ -1,8 +1,8 @@
 BUILD_DIR ?= ./build
 OUTPUT ?= $(BUILD_DIR)/gunny
-VERSION ?= $(shell git describe --tags $(git rev-list --tags --max-count=1))
-BUILD ?= $(shell git rev-parse --short HEAD)
-LDFLAGS ?= -ldflags "-X=main.gunnyVersion=$(VERSION) -X=main.gunnyBuild=$(BUILD)"
+VERSION ?= $(shell git describe --abbrev=0 --tags $(git rev-list --tags --max-count=1))
+COMMIT ?= $(shell git rev-parse --short HEAD)
+LDFLAGS ?= -ldflags "-X=main.gunnyVersion=$(VERSION) -X=main.gunnyCommit=$(COMMIT)"
 
 .PHONY: build
 build:

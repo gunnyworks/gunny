@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newRootCmd(version string, build string) *cobra.Command {
+func newRootCmd(version string, commit string) *cobra.Command {
 	showVersion := false
 	verbose := false
 	templateContent := ""
@@ -35,8 +35,8 @@ func newRootCmd(version string, build string) *cobra.Command {
 				}),
 			))
 			if showVersion {
-				if len(build) > 0 {
-					fmt.Printf("%s-%s\n", version, build)
+				if len(commit) > 0 {
+					fmt.Printf("%s-%s\n", version, commit)
 				} else {
 					fmt.Println(version)
 				}

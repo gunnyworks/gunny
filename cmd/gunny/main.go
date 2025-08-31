@@ -7,11 +7,11 @@ import (
 
 var (
 	gunnyVersion = "dev"
-	gunnyBuild   = ""
+	gunnyCommit  = ""
 )
 
 func main() {
-	if err := newRootCmd(gunnyVersion, gunnyBuild).Execute(); err != nil {
+	if err := newRootCmd(gunnyVersion, gunnyCommit).Execute(); err != nil {
 		slog.Error("Failed to run Gunny", "error", err)
 		os.Exit(1)
 	}
