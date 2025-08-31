@@ -9,6 +9,8 @@ Fast, simple static text generation from templates and data.
 ```bash
 gunny -t 'Hello {{name}}!' -v name=Michael
 # Hello Michael!
+
+echo '{"name": "Gary"}' | gunny -t 'Hello {{name}}!'
 ```
 
 ## Versioning

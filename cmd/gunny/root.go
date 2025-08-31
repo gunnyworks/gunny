@@ -53,7 +53,10 @@ func newRootCmd() *cobra.Command {
 		},
 		Example: `
     # Render the value "Michael" (named "name") through the given template.
-    gunny -t 'Hello {{name}}!' -d name=Michael`,
+    gunny -t 'Hello {{name}}!' -d name=Michael
+	
+	# Supply data via stdin (in JSON format, by default)
+	echo '{"name": "Michael"}' | gunny -t 'Hello {{name}}!'`,
 	}
 	cmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "increase output logging verbosity")
 	cmd.PersistentFlags().StringVarP(&templateContent, "template", "t", "", "template content")
