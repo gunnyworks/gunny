@@ -1,6 +1,18 @@
 package gunny
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
+
+type InvalidDataFormatError struct {
+	Supplied    string
+	ValidValues []string
+}
+
+func (e InvalidDataFormatError) Error() string {
+	return fmt.Sprintf("invalid data format \"%s\"; valid values: %s", e.Supplied, strings.Join(e.ValidValues, ", "))
+}
 
 type InvalidDataValueNameError struct {
 	Name string

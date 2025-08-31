@@ -7,7 +7,7 @@ import (
 
 func main() {
 	if err := newRootCmd().Execute(); err != nil {
-		slog.Error("Failed to run Gunny", "err", err)
+		slog.Error("Failed to run Gunny", "error", err)
 		os.Exit(1)
 	}
 }

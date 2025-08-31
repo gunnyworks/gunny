@@ -5,16 +5,42 @@ import (
 	"io"
 
 	"github.com/goccy/go-yaml"
+	"github.com/samber/lo"
 )
 
 type DataFormat string
 
 const (
-	DataFormatJSON DataFormat = "json"
-	DataFormatYAML DataFormat = "yaml"
+	DataFormatUnrecognized DataFormat = "unrecognized"
+	DataFormatJSON         DataFormat = "json"
+	DataFormatYAML         DataFormat = "yaml"
 )
 
-// NewDataResolverFromReader attempts to parse data from the given reader into
+var validDataFormatValues = []DataFormat{
+	DataFormatJSON,
+	DataFormatYAML,
+}
+
+// DataFormatFromString attempts to convert the given string to a valid
+// [DataFormat] value. Returns an error if the supplied value is not
+// recognized.
+func DataFormatFromString(s string) (DataFormat, error) {
+	switch s {
+	case string(DataFormatJSON):
+		return DataFormatJSON, nil
+	case string(DataFormatYAML):
+		return DataFormatYAML, nil
+	default:
+		return DataFormatUnrecognized, InvalidDataFormatError{
+			Supplied: s,
+			ValidValues: lo.Map(validDataFormatValues, func(v DataFormat, _ int) string {
+				return string(v)
+			}),
+		}
+	}
+}
+
+// NewDataResolverFromReaderattempts to parse data from the given reader into
 // an in-memory data map.
 func NewDataResolverFromReader(reader io.Reader, format DataFormat) (DataResolverMap, error) {
 	switch format {
