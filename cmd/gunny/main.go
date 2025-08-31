@@ -5,8 +5,13 @@ import (
 	"os"
 )
 
+var (
+	gunnyVersion = "dev"
+	gunnyBuild   = ""
+)
+
 func main() {
-	if err := newRootCmd().Execute(); err != nil {
+	if err := newRootCmd(gunnyVersion, gunnyBuild).Execute(); err != nil {
 		slog.Error("Failed to run Gunny", "error", err)
 		os.Exit(1)
 	}

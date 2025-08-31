@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"os"
 	"strings"
@@ -12,7 +13,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newRootCmd() *cobra.Command {
+func newRootCmd(version string, build string) *cobra.Command {
+	showVersion := false
 	verbose := false
 	templateContent := ""
 	namedDataValues := []string{}
@@ -32,6 +34,14 @@ func newRootCmd() *cobra.Command {
 					TimeFormat: time.RFC3339,
 				}),
 			))
+			if showVersion {
+				if len(build) > 0 {
+					fmt.Printf("%s-%s\n", version, build)
+				} else {
+					fmt.Println(version)
+				}
+				os.Exit(0)
+			}
 			stdinDataFormat, err := gunny.DataFormatFromString(stdinDataFormatString)
 			if err != nil {
 				slog.Error("Invalid argument(s)", "error", err)
@@ -58,6 +68,7 @@ func newRootCmd() *cobra.Command {
 	# Supply data via stdin (in JSON format, by default)
 	echo '{"name": "Michael"}' | gunny -t 'Hello {{name}}!'`,
 	}
+	cmd.PersistentFlags().BoolVar(&showVersion, "version", false, "show the program version and exit immediately")
 	cmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "increase output logging verbosity")
 	cmd.PersistentFlags().StringVarP(&templateContent, "template", "t", "", "template content")
 	cmd.PersistentFlags().StringArrayVarP(&namedDataValues, "data", "d", []string{}, "specify named data values (name=value) to inject into the template")
