@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## v0.2.0
+
+_Aug 31st, 2025_
 
 - [\#2](https://github.com/gunnyworks/gunny/pull/2) Allow the user to supply
   templates from files with the `--template-file` CLI argument.
