@@ -22,6 +22,9 @@ latest version for your platform, installing it somewhere on your system path.
 
 ### Installing from source
 
+In order to build from source, you will need [Go v1.25.0](https://go.dev) or
+higher installed.
+
 ```bash
 go install github.com/gunnyworks/gunny/cmd/gunny@latest
 ```
