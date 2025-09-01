@@ -8,8 +8,8 @@ import (
 
 // Pipeline encapsulates a Gunny rendering pipeline.
 type Pipeline struct {
-	renderer  Renderer
 	resolvers DataResolverMap
+	renderer  Renderer
 	writer    io.Writer
 	logger    Logger
 }
