@@ -29,6 +29,15 @@ func WithMustacheTemplateFromReader(r io.Reader) newPipelineOption {
 	}
 }
 
+// WithNamedDataResolver allows one to supply a custom named data resolver to a
+// Gunny rendering pipeline.
+func WithNamedDataResolver(resolver DataResolverMap) newPipelineOption {
+	return func(pipeline *Pipeline) error {
+		pipeline.resolvers.Merge(resolver)
+		return nil
+	}
+}
+
 // WithDataFromNameValuePairs allows one to supply data to a Gunny pipeline
 // from "name=value" strings (usually from the command line).
 func WithDataFromNameValuePairs(nameValuePairStrings []string) newPipelineOption {
