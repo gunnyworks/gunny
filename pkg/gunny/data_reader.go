@@ -33,7 +33,7 @@ func DataFormatFromString(s string) (DataFormat, error) {
 	case string(DataFormatYAML):
 		return DataFormatYAML, nil
 	default:
-		return DataFormatUnrecognized, InvalidDataFormatError{
+		return DataFormatUnrecognized, ErrInvalidDataFormat{
 			Supplied: s,
 			ValidValues: lo.Map(validDataFormatValues, func(v DataFormat, _ int) string {
 				return string(v)
@@ -51,7 +51,7 @@ func NewDataResolverFromReader(reader io.Reader, format DataFormat) (DataResolve
 	case DataFormatYAML:
 		return newYAMLDataResolverFromReader(reader)
 	default:
-		return nil, UnrecognizedDataFormatError{
+		return nil, ErrUnrecognizedDataFormat{
 			Format: string(format),
 		}
 	}

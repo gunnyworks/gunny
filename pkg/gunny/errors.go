@@ -5,64 +5,83 @@ import (
 	"strings"
 )
 
-type InvalidDataFormatError struct {
+type ErrInvalidDataFormat struct {
 	Supplied    string
 	ValidValues []string
 }
 
-func (e InvalidDataFormatError) Error() string {
+func (e ErrInvalidDataFormat) Error() string {
 	return fmt.Sprintf("invalid data format \"%s\"; valid values: %s", e.Supplied, strings.Join(e.ValidValues, ", "))
 }
 
-type InvalidDataValueNameError struct {
+type ErrInvalidDataValueName struct {
 	Name string
 }
 
-func (e InvalidDataValueNameError) Error() string {
+func (e ErrInvalidDataValueName) Error() string {
 	return fmt.Sprintf("invalid data value name: %s", e.Name)
 }
 
-type ValueResolutionError struct {
+type ErrValueResolution struct {
 	Name  string
 	Cause error
 }
 
-func (e ValueResolutionError) Error() string {
+func (e ErrValueResolution) Error() string {
 	return fmt.Sprintf("failed to resolve value for \"%s\": %s", e.Name, e.Cause)
 }
 
-func (e ValueResolutionError) Unwrap() error {
+func (e ErrValueResolution) Unwrap() error {
 	return e.Cause
 }
 
-type NamedValuePairParsingError struct {
+type ErrNamedValuePairParsing struct {
 	Cause error
 }
 
-func (e NamedValuePairParsingError) Error() string {
+func (e ErrNamedValuePairParsing) Error() string {
 	return fmt.Sprintf("failed to parse named value pair: %s", e.Cause)
 }
 
-func (e NamedValuePairParsingError) Unwrap() error {
+func (e ErrNamedValuePairParsing) Unwrap() error {
 	return e.Cause
 }
 
-type UnrecognizedDataFormatError struct {
+type ErrUnrecognizedDataFormat struct {
 	Format string
 }
 
-func (e UnrecognizedDataFormatError) Error() string {
+func (e ErrUnrecognizedDataFormat) Error() string {
 	return fmt.Sprintf("unrecognized data format: %s", e.Format)
 }
 
-type TemplateReadError struct {
+type ErrTemplateRead struct {
 	Cause error
 }
 
-func (e TemplateReadError) Error() string {
+func (e ErrTemplateRead) Error() string {
 	return fmt.Sprintf("failed to read template; %s", e.Cause)
 }
 
-func (e TemplateReadError) Unwrap() error {
+func (e ErrTemplateRead) Unwrap() error {
 	return e.Cause
 }
+
+type ErrInvalidPipelineConfigFormat struct {
+	Supplied    string
+	ValidValues []string
+}
+
+func (e ErrInvalidPipelineConfigFormat) Error() string {
+	return fmt.Sprintf("invalid pipeline configuration format \"%s\"; valid values: %s", e.Supplied, strings.Join(e.ValidValues, ", "))
+}
+
+type ErrMissingEnvVar struct {
+	Name string
+}
+
+func (e ErrMissingEnvVar) Error() string {
+	return fmt.Sprintf("missing required environment variable: %s", e.Name)
+}
+
+var ErrNoDataSources = fmt.Errorf("pipeline must have at least one data source configured")

@@ -28,13 +28,13 @@ func NewNameValuePairsDataResolver(args []string) (DataResolverMap, error) {
 func parseNameValuePairString(arg string) (string, string, error) {
 	matches := nameValuePairRegexp.FindStringSubmatch(arg)
 	if len(matches) == 0 {
-		return "", "", NamedValuePairParsingError{
+		return "", "", ErrNamedValuePairParsing{
 			Cause: fmt.Errorf("invalid format for argument \"%s\"", arg),
 		}
 	}
 	name := matches[nameValuePairNameIndex]
 	if len(name) == 0 {
-		return "", "", NamedValuePairParsingError{
+		return "", "", ErrNamedValuePairParsing{
 			Cause: fmt.Errorf("failed to parse data value name from argument \"%s\"", arg),
 		}
 	}

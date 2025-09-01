@@ -25,7 +25,7 @@ func NewInMemoryDataResolverMap(src map[string]any) (DataResolverMap, error) {
 	result := make(DataResolverMap, len(src))
 	for name, value := range src {
 		if !validDataValueNameRegexp.MatchString(name) {
-			return nil, InvalidDataValueNameError{Name: name}
+			return nil, ErrInvalidDataValueName{Name: name}
 		}
 		result[name] = NewInMemoryDataValue(value)
 	}
@@ -38,7 +38,7 @@ func (v DataResolverMap) Resolve(ctx context.Context) (any, error) {
 	for name, value := range v {
 		resolvedValue, err := value.Resolve(ctx)
 		if err != nil {
-			return nil, ValueResolutionError{
+			return nil, ErrValueResolution{
 				Name:  name,
 				Cause: err,
 			}
