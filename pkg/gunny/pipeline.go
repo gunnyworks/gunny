@@ -51,6 +51,31 @@ func WithDataFromNameValuePairs(nameValuePairStrings []string) newPipelineOption
 	}
 }
 
+// WithDataFromEnvVars injects environment variables as data into the rendering
+// pipeline. If an expected environment variable is not present, an error will
+// be produced. If an optional environment variable is not present, it will
+// simply not be set.
+func WithDataFromEnvVars(expectedEnvVars []string, optionalEnvVars []string) newPipelineOption {
+	return func(pipeline *Pipeline) error {
+		resolver := make(DataResolverMap)
+		for _, envVar := range expectedEnvVars {
+			value, exists := os.LookupEnv(envVar)
+			if !exists {
+				return ErrMissingEnvVar{Name: envVar}
+			}
+			resolver[envVar] = NewInMemoryDataValue(value)
+		}
+		for _, envVar := range optionalEnvVars {
+			value, exists := os.LookupEnv(envVar)
+			if exists {
+				resolver[envVar] = NewInMemoryDataValue(value)
+			}
+		}
+		pipeline.resolvers.Merge(resolver)
+		return nil
+	}
+}
+
 // WithDataFromStdin is similar to [WithDataFromReader], but first checks
 // whether there is any data available to read from stdin. Otherwise results in
 // an empty data set.
