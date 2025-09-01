@@ -8,6 +8,10 @@ LDFLAGS ?= -ldflags "-X=main.version=$(VERSION) -X=main.commit=$(COMMIT)"
 build:
 	go build -o $(OUTPUT) $(LDFLAGS) ./cmd/gunny/
 
+.PHONY: lint
+lint:
+	golangci-lint run ./...
+
 .PHONY: test
 test:
 	go test -v ./...
