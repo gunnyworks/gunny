@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-// Pipeline encapsulates the configuration of a Gunny rendering pipeline.
+// Pipeline encapsulates a Gunny rendering pipeline.
 type Pipeline struct {
 	renderer  Renderer
 	resolvers DataResolverMap
