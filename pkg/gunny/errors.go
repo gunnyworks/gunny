@@ -3,6 +3,7 @@ package gunny
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 
 	"github.com/samber/lo"
@@ -104,13 +105,21 @@ func (e InvalidDataSourceTypeError) Error() string {
 	return fmt.Sprintf("invalid data source type \"%s\"; valid values: %s", e.Supplied, strings.Join(e.ValidValues, ", "))
 }
 
-type InvalidDataSourceConfigError struct {
-	Expected string
-	Actual   string
+type InvalidConfigTypeError struct {
+	Expected any
+	Actual   any
 }
 
-func (e InvalidDataSourceConfigError) Error() string {
-	return fmt.Sprintf("expected data source config of type %s, but got %s", e.Expected, e.Actual)
+func (e InvalidConfigTypeError) Error() string {
+	expectedType := "nil"
+	actualType := "nil"
+	if e.Expected != nil {
+		expectedType = reflect.TypeOf(e.Expected).Name()
+	}
+	if e.Actual != nil {
+		actualType = reflect.TypeOf(e.Actual).Name()
+	}
+	return fmt.Sprintf("expected configuration of type %s, but got %s", expectedType, actualType)
 }
 
 type UnrecognizedFileExtError struct {
@@ -120,15 +129,6 @@ type UnrecognizedFileExtError struct {
 
 func (e UnrecognizedFileExtError) Error() string {
 	return fmt.Sprintf("unrecognized file extension \"%s\"; supported file extensions: %s", e.Ext, strings.Join(e.SupportedExts, ", "))
-}
-
-type InvalidRendererConfigError struct {
-	Expected string
-	Actual   string
-}
-
-func (e InvalidRendererConfigError) Error() string {
-	return fmt.Sprintf("expected renderer config of type %s, but got %s", e.Expected, e.Actual)
 }
 
 type InvalidRendererTypeError struct {
@@ -147,15 +147,6 @@ type InvalidOutputTypeError struct {
 
 func (e InvalidOutputTypeError) Error() string {
 	return fmt.Sprintf("invalid output type \"%s\"; valid values: %s", e.Supplied, strings.Join(e.ValidValues, ", "))
-}
-
-type InvalidOutputConfigError struct {
-	Expected string
-	Actual   string
-}
-
-func (e InvalidOutputConfigError) Error() string {
-	return fmt.Sprintf("expected output config of type %s, but got %s", e.Expected, e.Actual)
 }
 
 type UnsupportedVersionError struct {

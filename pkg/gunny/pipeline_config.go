@@ -333,7 +333,7 @@ func (c *DataSourceConfig) unmarshalConfig(data []byte, unmarshalFn func([]byte,
 		}
 		c.Config = &cfg
 	case DataSourceMap:
-		var cfg map[string]any
+		cfg := make(map[string]any)
 		if err := unmarshalFn(data, &cfg); err != nil {
 			return err
 		}
@@ -507,6 +507,12 @@ func (c *RendererConfig) unmarshalConfig(data []byte, unmarshalFn func([]byte, a
 }
 
 func (c *RendererConfig) Validate() error {
+	switch c.Type {
+	case RendererMustache:
+		if c.Config == nil {
+			return ErrMissingRendererConfig
+		}
+	}
 	validator, canValidate := c.Config.(Validator)
 	if canValidate {
 		return validator.Validate()

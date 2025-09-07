@@ -5,7 +5,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"reflect"
 	"strings"
 
 	"github.com/samber/lo"
@@ -337,18 +336,18 @@ func buildOptionsFromDataSourcesConfig(config []*DataSourceConfig, cliArgsNamedD
 		case DataSourceEnvVars:
 			dataSourceConfig, ok := dataSource.Config.(*EnvVarsDataSourceConfig)
 			if !ok {
-				return nil, InvalidDataSourceConfigError{
-					Expected: reflect.TypeOf((*EnvVarsDataSourceConfig)(nil)).Name(),
-					Actual:   reflect.TypeOf(dataSource.Config).Name(),
+				return nil, InvalidConfigTypeError{
+					Expected: EnvVarsDataSourceConfig{},
+					Actual:   dataSource.Config,
 				}
 			}
 			opts = append(opts, WithDataFromEnvVars(dataSourceConfig.Expected, dataSourceConfig.Optional))
 		case DataSourceCLIArgs:
 			dataSourceConfig, ok := dataSource.Config.(*CLIArgsDataSourceConfig)
 			if !ok {
-				return nil, InvalidDataSourceConfigError{
-					Expected: reflect.TypeOf((*CLIArgsDataSourceConfig)(nil)).Name(),
-					Actual:   reflect.TypeOf(dataSource.Config).Name(),
+				return nil, InvalidConfigTypeError{
+					Expected: CLIArgsDataSourceConfig{},
+					Actual:   dataSource.Config,
 				}
 			}
 			opts = append(opts, WithDataFromCLIArgs(cliArgsNamedDataValues, dataSourceConfig.Expected, dataSourceConfig.Optional))
@@ -356,27 +355,27 @@ func buildOptionsFromDataSourcesConfig(config []*DataSourceConfig, cliArgsNamedD
 		case DataSourceStdin:
 			dataSourceConfig, ok := dataSource.Config.(*StdinDataSourceConfig)
 			if !ok {
-				return nil, InvalidDataSourceConfigError{
-					Expected: reflect.TypeOf((*StdinDataSourceConfig)(nil)).Name(),
-					Actual:   reflect.TypeOf(dataSource.Config).Name(),
+				return nil, InvalidConfigTypeError{
+					Expected: StdinDataSourceConfig{},
+					Actual:   dataSource.Config,
 				}
 			}
 			opts = append(opts, WithDataFromStdin(dataSourceConfig.Format))
 		case DataSourceFile:
 			dataSourceConfig, ok := dataSource.Config.(*FileDataSourceConfig)
 			if !ok {
-				return nil, InvalidDataSourceConfigError{
-					Expected: reflect.TypeOf((*FileDataSourceConfig)(nil)).Name(),
-					Actual:   reflect.TypeOf(dataSource.Config).Name(),
+				return nil, InvalidConfigTypeError{
+					Expected: FileDataSourceConfig{},
+					Actual:   dataSource.Config,
 				}
 			}
 			opts = append(opts, WithDataFromFile(dataSourceConfig.Path, dataSourceConfig.Format))
 		case DataSourceMap:
 			dataSourceConfig, ok := dataSource.Config.(map[string]any)
 			if !ok {
-				return nil, InvalidDataSourceConfigError{
-					Expected: reflect.TypeOf(map[string]any{}).Name(),
-					Actual:   reflect.TypeOf(dataSource.Config).Name(),
+				return nil, InvalidConfigTypeError{
+					Expected: map[string]any{},
+					Actual:   dataSource.Config,
 				}
 			}
 			opts = append(opts, WithDataFromMap(dataSourceConfig))
@@ -405,9 +404,9 @@ func buildOptionsFromRendererConfig(config *RendererConfig) ([]newPipelineOption
 	case RendererMustache:
 		rendererConfig, ok := config.Config.(*MustacheRendererConfig)
 		if !ok {
-			return nil, InvalidRendererConfigError{
-				Expected: reflect.TypeOf((*MustacheRendererConfig)(nil)).Name(),
-				Actual:   reflect.TypeOf(config.Config).Name(),
+			return nil, InvalidConfigTypeError{
+				Expected: MustacheRendererConfig{},
+				Actual:   config.Config,
 			}
 		}
 		switch {
@@ -438,9 +437,9 @@ func buildOptionsFromOutputsConfig(outputBasePath string, configs []*OutputConfi
 		case OutputFile:
 			outputConfig, ok := config.Config.(*FileOutputConfig)
 			if !ok {
-				return nil, InvalidOutputConfigError{
-					Expected: reflect.TypeOf((*FileOutputConfig)(nil)).Name(),
-					Actual:   reflect.TypeOf(config.Config).Name(),
+				return nil, InvalidConfigTypeError{
+					Expected: FileOutputConfig{},
+					Actual:   config.Config,
 				}
 			}
 			outputPath := outputConfig.Path
