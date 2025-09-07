@@ -1,0 +1,4 @@
+-c
+data/pipelineconfig/json-multiple-datasources-stdout.json
+-d
+name=Sarah

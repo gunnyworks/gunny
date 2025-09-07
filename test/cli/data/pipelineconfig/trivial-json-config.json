@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "renderer": {
+    "type": "mustache",
+    "config": {
+      "template": "Hello {{name}}!"
+    }
+  }
+}

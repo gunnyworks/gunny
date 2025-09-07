@@ -1,0 +1,40 @@
+{
+  "version": "v1",
+  "data_sources": [
+    {
+      "type": "env-vars",
+      "config": {
+        "expected": ["ENV_VAR1", "ENV_VAR2"],
+        "optional": ["ENV_VAR3"]
+      }
+    },
+    {
+      "type": "file",
+      "config": {
+        "path": "/path/to/file.yaml",
+        "format": "yaml"
+      }
+    },
+    {
+      "type": "cli-args",
+      "config": {
+        "expected": ["arg1", "arg2"],
+        "optional": ["arg3", "arg4"]
+      }
+    }
+  ],
+  "renderer": {
+    "type": "mustache",
+    "config": {
+      "template_file": "/path/to/template.mustache"
+    }
+  },
+  "outputs": [
+    {
+      "type": "file",
+      "config": {
+        "path": "/path/to/output.html"
+      }
+    }
+  ]
+}

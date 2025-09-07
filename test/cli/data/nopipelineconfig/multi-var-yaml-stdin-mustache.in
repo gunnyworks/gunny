@@ -1,0 +1,4 @@
+-t
+Hello {{name}}! You have {{count}} new messages.
+--stdin-format
+yaml

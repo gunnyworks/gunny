@@ -1,8 +1,11 @@
 package gunny
 
 import (
+	"errors"
 	"fmt"
 	"strings"
+
+	"github.com/samber/lo"
 )
 
 type InvalidDataFormatError struct {
@@ -66,3 +69,135 @@ func (e TemplateReadError) Error() string {
 func (e TemplateReadError) Unwrap() error {
 	return e.Cause
 }
+
+type InvalidPipelineConfigFormatError struct {
+	Supplied    string
+	ValidValues []string
+}
+
+func (e InvalidPipelineConfigFormatError) Error() string {
+	return fmt.Sprintf("invalid pipeline configuration format \"%s\"; valid values: %s", e.Supplied, strings.Join(e.ValidValues, ", "))
+}
+
+type MissingEnvVarError struct {
+	Name string
+}
+
+func (e MissingEnvVarError) Error() string {
+	return fmt.Sprintf("missing required environment variable: %s", e.Name)
+}
+
+type MissingCLIArgError struct {
+	Name string
+}
+
+func (e MissingCLIArgError) Error() string {
+	return fmt.Sprintf("missing required command line argument: %s", e.Name)
+}
+
+type InvalidDataSourceTypeError struct {
+	Supplied    string
+	ValidValues []string
+}
+
+func (e InvalidDataSourceTypeError) Error() string {
+	return fmt.Sprintf("invalid data source type \"%s\"; valid values: %s", e.Supplied, strings.Join(e.ValidValues, ", "))
+}
+
+type InvalidDataSourceConfigError struct {
+	Expected string
+	Actual   string
+}
+
+func (e InvalidDataSourceConfigError) Error() string {
+	return fmt.Sprintf("expected data source config of type %s, but got %s", e.Expected, e.Actual)
+}
+
+type UnrecognizedFileExtError struct {
+	Ext           string
+	SupportedExts []string
+}
+
+func (e UnrecognizedFileExtError) Error() string {
+	return fmt.Sprintf("unrecognized file extension \"%s\"; supported file extensions: %s", e.Ext, strings.Join(e.SupportedExts, ", "))
+}
+
+type InvalidRendererConfigError struct {
+	Expected string
+	Actual   string
+}
+
+func (e InvalidRendererConfigError) Error() string {
+	return fmt.Sprintf("expected renderer config of type %s, but got %s", e.Expected, e.Actual)
+}
+
+type InvalidRendererTypeError struct {
+	Supplied    string
+	ValidValues []string
+}
+
+func (e InvalidRendererTypeError) Error() string {
+	return fmt.Sprintf("invalid renderer type \"%s\"; valid values: %s", e.Supplied, strings.Join(e.ValidValues, ", "))
+}
+
+type InvalidOutputTypeError struct {
+	Supplied    string
+	ValidValues []string
+}
+
+func (e InvalidOutputTypeError) Error() string {
+	return fmt.Sprintf("invalid output type \"%s\"; valid values: %s", e.Supplied, strings.Join(e.ValidValues, ", "))
+}
+
+type InvalidOutputConfigError struct {
+	Expected string
+	Actual   string
+}
+
+func (e InvalidOutputConfigError) Error() string {
+	return fmt.Sprintf("expected output config of type %s, but got %s", e.Expected, e.Actual)
+}
+
+type UnsupportedVersionError struct {
+	Supplied          string
+	SupportedVersions []string
+}
+
+func (e UnsupportedVersionError) Error() string {
+	return fmt.Sprintf("unsupported pipeline configuration version \"%s\"; supported versions: %s", e.Supplied, strings.Join(e.SupportedVersions, ", "))
+}
+
+type InvalidStdinDataSourceConfig struct {
+	Cause error
+}
+
+func (e InvalidStdinDataSourceConfig) Error() string {
+	return fmt.Sprintf("invalid stdin data source configuration: %s", e.Cause)
+}
+
+func (e InvalidStdinDataSourceConfig) Unwrap() error {
+	return e.Cause
+}
+
+type MultiWriterCloseFailedError struct {
+	Causes []error
+}
+
+func (e MultiWriterCloseFailedError) Error() string {
+	return fmt.Sprintf(
+		"failed to close one or more writers: %s",
+		strings.Join(lo.Map(e.Causes, func(c error, _ int) string {
+			return c.Error()
+		}), ", "),
+	)
+}
+
+var (
+	ErrMissingTemplate                  = errors.New("no template or template file supplied")
+	ErrTooManyTemplates                 = errors.New("too many templates - either the template or template file can be specified, but not both")
+	ErrMissingDataSource                = errors.New("no data source(s) specified")
+	ErrMissingRendererConfig            = errors.New("no renderer configuration specified")
+	ErrMissingOutputConfig              = errors.New("no output configuration specified")
+	ErrRedundantCLIArgsDataSourceConfig = errors.New("redundant (empty) CLI arguments data source configuration")
+	ErrRedundantEnvVarsDataSourceConfig = errors.New("redundant (empty) environment variables data source configuration")
+)

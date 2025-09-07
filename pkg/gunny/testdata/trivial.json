@@ -1,0 +1,11 @@
+{
+  "version": "v1",
+  "data_sources": [
+    {
+      "type": "stdin",
+      "config": {
+        "format": "json"
+      }
+    }
+  ]
+}

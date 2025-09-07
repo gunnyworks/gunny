@@ -3,6 +3,8 @@ package gunny
 import (
 	"encoding/json"
 	"io"
+	"path/filepath"
+	"strings"
 
 	"github.com/goccy/go-yaml"
 	"github.com/samber/lo"
@@ -23,6 +25,12 @@ var validDataFormatValues = []DataFormat{
 	DataFormatYAML,
 }
 
+var formatFromFileExt = map[string]DataFormat{
+	".json": DataFormatJSON,
+	".yaml": DataFormatYAML,
+	".yml":  DataFormatYAML,
+}
+
 // DataFormatFromString attempts to convert the given string to a valid
 // [DataFormat] value. Returns an error if the supplied value is not
 // recognized.
@@ -40,6 +48,31 @@ func DataFormatFromString(s string) (DataFormat, error) {
 			}),
 		}
 	}
+}
+
+// GetFileDataFormatFromFilename attempts to detect the [DataFormat] of a file
+// based purely on its extension.
+func GetFileDataFormatFromFilename(filename string) (DataFormat, error) {
+	ext := strings.ToLower(filepath.Ext(filename))
+	if format, ok := formatFromFileExt[ext]; ok {
+		return format, nil
+	}
+	return DataFormatUnrecognized, UnrecognizedFileExtError{
+		Ext:           ext,
+		SupportedExts: lo.Keys(formatFromFileExt),
+	}
+}
+
+func (df DataFormat) Validate() error {
+	if !lo.Contains(validDataFormatValues, df) {
+		return InvalidDataFormatError{
+			Supplied: string(df),
+			ValidValues: lo.Map(validDataFormatValues, func(v DataFormat, _ int) string {
+				return string(v)
+			}),
+		}
+	}
+	return nil
 }
 
 // NewDataResolverFromReaderattempts to parse data from the given reader into

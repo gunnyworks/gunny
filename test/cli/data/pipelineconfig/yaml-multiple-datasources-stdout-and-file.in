@@ -1,0 +1,4 @@
+-c
+data/pipelineconfig/yaml-multiple-datasources-stdout-and-file.yaml
+-d
+name=Sarah
