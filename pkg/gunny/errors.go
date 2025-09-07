@@ -158,15 +158,16 @@ func (e UnsupportedVersionError) Error() string {
 	return fmt.Sprintf("unsupported pipeline configuration version \"%s\"; supported versions: %s", e.Supplied, strings.Join(e.SupportedVersions, ", "))
 }
 
-type InvalidStdinDataSourceConfig struct {
+type InvalidConfigError struct {
+	Type  DataSourceType
 	Cause error
 }
 
-func (e InvalidStdinDataSourceConfig) Error() string {
-	return fmt.Sprintf("invalid stdin data source configuration: %s", e.Cause)
+func (e InvalidConfigError) Error() string {
+	return fmt.Sprintf("invalid %s configuration: %s", e.Type, e.Cause)
 }
 
-func (e InvalidStdinDataSourceConfig) Unwrap() error {
+func (e InvalidConfigError) Unwrap() error {
 	return e.Cause
 }
 
@@ -187,6 +188,8 @@ var (
 	ErrMissingTemplate                  = errors.New("no template or template file supplied")
 	ErrTooManyTemplates                 = errors.New("too many templates - either the template or template file can be specified, but not both")
 	ErrMissingDataSource                = errors.New("no data source(s) specified")
+	ErrMissingConfig                    = errors.New("missing configuration")
+	ErrMissingFilePath                  = errors.New("missing file path")
 	ErrMissingRendererConfig            = errors.New("no renderer configuration specified")
 	ErrMissingOutputConfig              = errors.New("no output configuration specified")
 	ErrRedundantCLIArgsDataSourceConfig = errors.New("redundant (empty) CLI arguments data source configuration")

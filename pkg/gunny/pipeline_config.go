@@ -351,6 +351,13 @@ func (c *DataSourceConfig) Validate() error {
 	if err := c.Type.Validate(); err != nil {
 		return err
 	}
+	// At present, no data source configurations can be nil.
+	if c.Config == nil {
+		return InvalidConfigError{
+			Type:  c.Type,
+			Cause: ErrMissingConfig,
+		}
+	}
 	validator, canValidate := c.Config.(Validator)
 	if canValidate {
 		return validator.Validate()
@@ -370,8 +377,11 @@ type CLIArgsDataSourceConfig struct {
 }
 
 func (c *CLIArgsDataSourceConfig) Validate() error {
+	if c == nil {
+		return InvalidConfigError{Type: DataSourceCLIArgs, Cause: ErrMissingConfig}
+	}
 	if len(c.Expected) == 0 && len(c.Optional) == 0 {
-		return ErrRedundantCLIArgsDataSourceConfig
+		return InvalidConfigError{Type: DataSourceCLIArgs, Cause: ErrRedundantCLIArgsDataSourceConfig}
 	}
 	return nil
 }
@@ -388,8 +398,11 @@ type EnvVarsDataSourceConfig struct {
 }
 
 func (c *EnvVarsDataSourceConfig) Validate() error {
+	if c == nil {
+		return InvalidConfigError{Type: DataSourceEnvVars, Cause: ErrMissingConfig}
+	}
 	if len(c.Expected) == 0 && len(c.Optional) == 0 {
-		return ErrRedundantEnvVarsDataSourceConfig
+		return InvalidConfigError{Type: DataSourceEnvVars, Cause: ErrRedundantEnvVarsDataSourceConfig}
 	}
 	return nil
 }
@@ -400,8 +413,11 @@ type StdinDataSourceConfig struct {
 }
 
 func (c *StdinDataSourceConfig) Validate() error {
+	if c == nil {
+		return InvalidConfigError{Type: DataSourceStdin, Cause: ErrMissingConfig}
+	}
 	if err := c.Format.Validate(); err != nil {
-		return InvalidStdinDataSourceConfig{Cause: err}
+		return InvalidConfigError{Type: DataSourceStdin, Cause: err}
 	}
 	return nil
 }
@@ -416,6 +432,16 @@ type FileDataSourceConfig struct {
 	// If multiple files are matched and this is specified, all of them will be
 	// matched according to this format.
 	Format *DataFormat `json:"format,omitempty" yaml:"format,omitempty"`
+}
+
+func (c *FileDataSourceConfig) Validate() error {
+	if c == nil {
+		return InvalidConfigError{Type: DataSourceFile, Cause: ErrMissingConfig}
+	}
+	if len(c.Path) == 0 {
+		return InvalidConfigError{Type: DataSourceFile, Cause: ErrMissingFilePath}
+	}
+	return nil
 }
 
 // RendererType defines an enum type of possible renderers.
