@@ -38,7 +38,7 @@ var _ Renderer = (*MustacheTemplateRenderer)(nil)
 func NewMustacheTemplateRenderer(r io.Reader) (*MustacheTemplateRenderer, error) {
 	tmpl, err := mustache.Parse(r)
 	if err != nil {
-		return nil, ErrTemplateRead{Cause: err}
+		return nil, TemplateReadError{Cause: err}
 	}
 	return &MustacheTemplateRenderer{
 		tmpl: tmpl,
