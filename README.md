@@ -58,6 +58,55 @@ echo '{"name": "Gary"}' | gunny --template-file ./hello.mustache
 # Hello Gary!
 ```
 
+### Pipeline configuration files
+
+Gunny supports pipeline construction from configuration files. At present, only
+JSON- and YAML-based configuration file formats are supported. Following is an
+example of a simple configuration file, defined in YAML:
+
+```yaml
+# pipeline.yaml
+
+# Configuration file format version
+version: v1
+
+# Data sources are processed in sequence, so in cases of data values with
+# conflicting names, the later data sources' values take precedence.
+data-sources:
+  # First, we specify a map of named data values.
+  - type: map
+    config:
+      name: Michael
+      count: 4
+  # Then, we allow any data from stdin (specified in YAML format) to override
+  # our map.
+  - type: stdin
+    config:
+      format: yaml
+
+# Renderer configuration, which controls which template engine we use as well
+# as the settings to apply to that template engine.
+renderer:
+  type: mustache
+  config:
+    template: "Hello {{name}}! You have {{count}} new messages."
+
+# Gunny supports multiple outputs. By default, if no output is specified,
+# stdout will be used.
+outputs:
+  - type: stdout
+```
+
+Then, running Gunny should give:
+
+```bash
+gunny -c pipeline.yaml
+# Hello Michael! You have 4 new messages.
+
+echo 'name: Sarah' | gunny -c pipeline.yaml
+# Hello Sarah! You have 4 new messages.
+```
+
 ## Versioning
 
 Gunny follows [semantic versioning](https://semver.org). Prior to v1.0, Gunny's
