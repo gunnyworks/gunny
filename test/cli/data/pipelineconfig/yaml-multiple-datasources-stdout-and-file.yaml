@@ -1,0 +1,21 @@
+version: v1
+data-sources:
+  - type: stdin
+    config:
+      format: yaml
+  - type: file
+    config:
+      path: data/pipelineconfig/yaml-multiple-datasources-stdout-and-file.input.yaml
+  - type: cli-args
+    config:
+      expected:
+        - name
+renderer:
+  type: mustache
+  config:
+    template-file: data/pipelineconfig/yaml-multiple-datasources-stdout-and-file.mustache
+outputs:
+  - type: stdout
+  - type: file
+    config:
+      path: yaml-multiple-datasources-stdout-and-file.out

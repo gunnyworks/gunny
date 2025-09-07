@@ -13,8 +13,8 @@ lint:
 	golangci-lint run ./...
 
 .PHONY: test
-test:
-	go test -v ./...
+test: build
+	./scripts/gocolourize.sh go test -v ./...
 
 .PHONY: tidy
 tidy:

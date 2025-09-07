@@ -1,0 +1,6 @@
+-t
+Hello {{name}}! You have {{count}} new messages.
+-d
+name=Gary
+-d
+count=4

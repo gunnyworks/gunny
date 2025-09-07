@@ -1,0 +1,4 @@
+-t
+Hello {{name}}!
+-d
+name=Michael

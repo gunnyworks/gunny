@@ -1,0 +1,12 @@
+version: v1
+data-sources:
+  - type: map
+    config:
+      name: Michael
+      count: 4
+renderer:
+  type: mustache
+  config:
+    template: 'Hello {{name}}! You have {{count}} messages.'
+outputs:
+  - type: stdout
