@@ -224,7 +224,7 @@ renderer:
 
 Gunny can write the renderer output data to one or more output destinations.
 
-```bash
+```yaml
 # A list of outputs to which to send rendered data. Order does not matter, as
 # they all receive the same output.
 outputs:
