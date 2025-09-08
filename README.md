@@ -109,6 +109,19 @@ echo 'name: Sarah' | gunny -c pipeline.yaml
 
 ## Pipeline Configuration
 
+Gunny implements a trivial "rendering pipeline" model that takes data from one
+or more data sources, passes it to a renderer, which in turn renders to one or
+more outputs. See the following diagram.
+
+```mermaid
+flowchart LR
+    DataSources[Data Sources]
+    Renderer
+    Outputs
+
+    DataSources-->Renderer-->Outputs
+```
+
 Gunny pipeline configuration files can, at present, be specified in either YAML
 or JSON format. Following is the high-level format in YAML:
 
