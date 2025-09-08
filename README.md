@@ -107,6 +107,138 @@ echo 'name: Sarah' | gunny -c pipeline.yaml
 # Hello Sarah! You have 4 new messages.
 ```
 
+## Pipeline Configuration
+
+Gunny pipeline configuration files can, at present, be specified in either YAML
+or JSON format. Following is the high-level format in YAML:
+
+```yaml
+# Should always be v1 for now.
+version: v1
+
+# Data sources are specified in order of precedence, from lowest to highest.
+data-sources:
+  # An array of data sources, each of the form:
+  - type: <data source type>
+    config:
+      # Configuration for this particular data source type.
+
+# A single Gunny pipeline only uses a single renderer.
+renderer:
+  # Which type of renderer should be used?
+  type: <renderer type>
+  # Renderer configuration
+  config:
+    # Configuration for this particular type of renderer.
+
+# A list of outputs to which the output data should be written.
+outputs:
+  - type: <output type>
+    config:
+      # Configuration for this particular type of output.
+```
+
+### Data Sources
+
+Gunny obtains its data from one or more data sources in order to make it
+available to the renderer. The following data source types are available:
+
+```yaml
+data-sources:
+  # Environment variables (an allow-list)
+  - type: env-vars
+    config:
+      # A list of environment variables to make available to the renderer that
+      # are EXPECTED to be present at the time of loading the pipeline
+      # configuration. If any of these variables are not set, Gunny will throw
+      # an error.
+      expected:
+        - ENVVAR1
+        - ENVVAR2
+      # A list of OPTIONAL environment variables to make available to the
+      # renderer. These work the same as the expected ones, except Gunny does
+      # not throw an error if any of them are not specified.
+      optional:
+        - ENVVAR3
+        - ...
+
+  # Command line arguments (specified by way of "-d name=value" flags)
+  - type: cli-args
+    config:
+      # A list of command line argument-specified data values to make available
+      # to the renderer that are EXPECTED to be present. If any of these values
+      # are not specified via command line arguments, Gunny will throw an
+      # error.
+      expected:
+        - arg1
+        - arg2
+      optional:
+        - arg3
+        - ...
+
+  # Read data from stdin, parse and interpret it as named data values
+  - type: stdin
+    config:
+      # Either "json" or "yaml"
+      format: json|yaml
+
+  # Read data from a file, parse and interpret it as named data values
+  - type: file
+    config:
+      # Required path to the file to read. If the format field is not specified
+      # (see below), the file format will attempt to be determined from this
+      # file's extension.
+      path: /path/to/file.json
+      # OPTIONAL format override. Useful when the file does not have an
+      # explicit, or has an unrelated, extension.
+      format: json|yaml
+
+  # A simple named data value map, whose names and values are explicitly
+  # specified in the pipeline configuration file itself.
+  - type: map
+    config:
+      # Arbitrary key/value pairs (values themselves can be nested objects)
+      hello: "world!"
+      a_number: 42
+```
+
+### Renderers
+
+At present, Gunny only supports [Mustache](https://mustache.github.io/)
+templates. More template engines are planned to be supported in future.
+
+```yaml
+renderer:
+  type: mustache
+  # NOTE: Only ONE of either the template or template file can be specified. If
+  # both (or neither) are specified, Gunny will fail with an error.
+  config:
+    # If you want to specify an inline template in the pipeline configuration
+    # itself.
+    template: "Mustache {{template}}"
+    # If you want Gunny to load the Mustache template from a file
+    template-file: /path/to/template.mustache
+```
+
+### Outputs
+
+Gunny can write the renderer output data to one or more output destinations.
+
+```bash
+# A list of outputs to which to send rendered data. Order does not matter, as
+# they all receive the same output.
+outputs:
+  # The default output if no outputs are explicitly specified.
+  # Write to stdout. This option has no configuration associated with it.
+  - type: stdout
+
+  # Write to a file.
+  - type: file
+    config:
+      # Where to write the output data
+      path: /path/to/output/file
+```
+
 ## Versioning
 
 Gunny follows [semantic versioning](https://semver.org). Prior to v1.0, Gunny's
