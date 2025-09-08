@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.3.0
+
+_Sep 8th, 2025_
+
+- [\#9](https://github.com/gunnyworks/gunny/pull/9) Add support for pipeline
+  construction from configuration file via the `--config` or `-c` CLI
+  parameter.
+
 ## v0.2.0
 
 _Aug 31st, 2025_
