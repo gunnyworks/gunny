@@ -6,6 +6,10 @@
 
 Fast, simple static text generation from templates and data.
 
+**NOTE**: Gunny is very much an alpha-quality application at present. If you
+find bugs, please [create
+issues](https://github.com/gunnyworks/gunny/issues/new/choose) for them.
+
 ## Installation
 
 ### Prerequisites
